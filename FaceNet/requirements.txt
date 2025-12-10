@@ -1,0 +1,6 @@
+opencv-python
+numpy
+mtcnn
+keras-facenet
+scikit-learn
+pickle-mixin
