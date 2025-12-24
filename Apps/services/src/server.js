@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(
   cors({
-    origin: "http://localhost:8080", // ✅ exact frontend origin
+    origin: "http://192.168.0.70:8080", // ✅ exact frontend origin
     credentials: true,               // ✅ allow cookies
   })
 );
