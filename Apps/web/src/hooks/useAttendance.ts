@@ -1,6 +1,8 @@
 import { useState, useCallback } from "react";
 import type { Course, Session, Student, AttendanceStatus } from "@/types/attendance";
-import { fetchCourses, fetchSessionsByCourseId, fetchAttendanceByScheduleId } from "@/lib/api";
+import { fetchCourses } from "@/services/courseService";
+import { fetchSessionsByCourseId } from "@/services/sessionService";
+import { fetchAttendanceByScheduleId } from "@/services/studentService";
 
 const LATE_THRESHOLD_MINUTES = 50;
 

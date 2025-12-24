@@ -1,13 +1,15 @@
 import { Users } from "lucide-react";
 import { StudentCard } from "@/components/StudentCard";
 import type { Student } from "@/types/attendance";
+import { format } from "date-fns";
 
 interface StudentListProps {
   students: Student[];
   sessionName?: string;
+  sessionStartTime?: Date;
 }
 
-export function StudentList({ students, sessionName }: StudentListProps) {
+export function StudentList({ students, sessionName, sessionStartTime}: StudentListProps) {
   console.log("StudentList received students:", students);
   
   if (students.length === 0) {
@@ -37,6 +39,14 @@ export function StudentList({ students, sessionName }: StudentListProps) {
           <h3 className="text-lg font-semibold text-foreground">
             {sessionName || "Student Attendance"}
           </h3>
+
+          {/* ✅ FULL DATE */}
+          {sessionStartTime && (
+            <p className="text-sm text-muted-foreground">
+              {format(sessionStartTime, "EEEE, MMMM d yyyy")}
+            </p>
+          )}
+
           <p className="text-sm text-muted-foreground">
             {students.length} students enrolled
           </p>

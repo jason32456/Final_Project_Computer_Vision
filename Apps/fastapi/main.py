@@ -6,6 +6,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+CONFIDENCE_THRESHOLD = 0.8
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # restrict in production
@@ -19,7 +21,7 @@ def root():
     return {"message": "Hello FastAPI"}
 
 @app.post("/predict-face")
-async def health_check(file: UploadFile = File(...)):
+async def predict_face(file: UploadFile = File(...)):
     image_bytes = await file.read()
     np_img = np.frombuffer(image_bytes, np.uint8)
     img = cv2.imdecode(np_img, cv2.IMREAD_COLOR)
@@ -41,6 +43,9 @@ async def health_check(file: UploadFile = File(...)):
     # Predict
     prediction = svm_model.predict(embedding)[0]
     confidence = svm_model.predict_proba(embedding).max()
+
+    if confidence < CONFIDENCE_THRESHOLD:
+        prediction = "unknown"
 
     return {
         "prediction": prediction,

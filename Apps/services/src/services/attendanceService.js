@@ -59,7 +59,7 @@ const processAttendance = async (filePath, scheduleId) => {
     if (diffMinutes <= 50) {
       status = 'PRESENT';
   
-    } else {
+    } else if (diffMinutes > 50 && (now < new Date(schedule.endTime))) {
       status = 'LATE';
     
     }

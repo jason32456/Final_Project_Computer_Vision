@@ -9,7 +9,7 @@ import { StudentList } from "@/components/StudentList";
 import { CameraScanner } from "@/components/CameraScanner";
 import { useAttendance } from "@/hooks/useAttendance";
 import { useToast } from "@/hooks/use-toast";
-import { processFaceRecognition } from "@/lib/api";
+import { processFaceRecognition } from "../services/attendanceService";
 import type { AttendanceStatus } from "@/types/attendance";
 import { format } from "date-fns";
 
@@ -38,11 +38,6 @@ export default function Index() {
     fetchStudentData,
     isLoadingStudents,
   } = useAttendance();
-
-  console.log("=== INDEX RENDER ===");
-  console.log("selectedCourse:", selectedCourse);
-  console.log("selectedSession:", selectedSession);
-  console.log("students in session:", selectedSession?.students);
 
   // Check if the schedule has started
   const isScheduleStarted = (): boolean => {
@@ -95,10 +90,12 @@ export default function Index() {
       const result = await processFaceRecognition(imageData, selectedSession.scheduleId);
 
       console.log("Face recognition result:", result);
+      
+      console.log(selectedSession.students[0].name);
 
       // Find student by name (case-insensitive)
       const student = selectedSession.students.find(
-        (s) => s.name.toLowerCase() === result.studentName.toLowerCase()
+        (s) => s.name.toLowerCase() === result.student.toLowerCase()
       );
 
       console.log("Matched student:", student);
@@ -121,12 +118,12 @@ export default function Index() {
 
       setScanResult({
         success: true,
-        message: `✓ ${result.studentName} - ${result.status} (${result.timeDifference})`,
+        message: `✓ ${result.student} - ${result.status} (${result.timeDifference})`,
       });
 
       toast({
         title: "Attendance Recorded",
-        description: `${result.studentName} marked as ${result.status}`,
+        description: `${result.student} marked as ${result.status}`,
       });
     } catch (error) {
       console.error("Face recognition error:", error);
@@ -235,6 +232,11 @@ export default function Index() {
                   sessionName={
                     selectedSession
                       ? `${selectedCourse?.code} - ${selectedSession.name}`
+                      : undefined
+                  }
+                  sessionStartTime={
+                    selectedSession?.date
+                      ? new Date(selectedSession.date)
                       : undefined
                   }
                 />
